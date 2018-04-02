@@ -76,7 +76,9 @@ func CreateMigration(name string) error {
 		return err
 	}
 
-	fileName := fmt.Sprintf("%s-%s.sql", time.Now().Format("20060102150405"), strings.TrimSpace(name))
+	formattedName := strings.ToLower(strings.Join(strings.Split(name, " "), "_"))
+
+	fileName := fmt.Sprintf("%s_%s.sql", time.Now().Format("20060102150405"), formattedName)
 	pathName := path.Join(env.Dir, fileName)
 	f, err := os.Create(pathName)
 
@@ -86,9 +88,9 @@ func CreateMigration(name string) error {
 	defer f.Close()
 
 	if err := tpl.Execute(f, nil); err != nil {
-		return err;
+		return err
 	}
 
 	ui.Output(fmt.Sprintf("Created migration %s", pathName))
-	return nil;
+	return nil
 }
